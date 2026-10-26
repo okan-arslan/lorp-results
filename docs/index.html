@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Corrected LoRP branch-and-price implementation, results for all 14,364 computational settings, incumbent solutions and benchmark data.">
+  <title>LoRP: Corrected Results and Code</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="wordmark" href="#top">LoRP</a>
+  <nav aria-label="Main navigation"><a href="#results">Results</a><a href="#correction">Correction</a><a href="#code">Code &amp; Data</a></nav>
+</header>
+<main id="top">
+  <section class="intro">
+    <p class="eyebrow">COMPUTATIONAL CORRECTION / VERSION 1.0.0 / 8 OCTOBER 2026</p>
+    <h1>LoRP: Corrected Results and Code</h1>
+    <p class="lead">A corrected branch-and-price implementation, benchmark results and accompanying code for the location-or-routing problem.</p>
+    <p class="byline">Okan Arslan</p>
+    <div class="totals" aria-label="Reconciled five-hour outcomes">
+      <div><strong>14,364</strong><span>Settings evaluated</span></div>
+      <div><strong class="optimal-color">7,541</strong><span>Optimal</span></div>
+      <div><strong>2,904</strong><span>Infeasible settings</span></div>
+      <div><strong>3,919</strong><span>Not proven optimal</span></div>
+    </div>
+    <p class="qualification">All 11,460 reported feasible incumbent solutions were independently checked. Optimality is assessed within the stated numerical tolerances.</p>
+  </section>
+  <section id="results" class="section">
+    <h2>Computational Results</h2>
+    <p>Results are available for all 14,364 computational settings: 7,541 were solved to optimality, 2,904 were classified as infeasible, and 3,919 remain without an optimality proof.</p>
+    <figure class="outcome-figure"><picture><source media="(max-width:600px)" srcset="assets/outcomes-mobile.png"><img src="assets/outcomes.png" width="1100" height="190" alt="Overall outcomes: 7,541 optimal, 2,904 infeasible and 3,919 not proven optimal."></picture><figcaption>All 14,364 settings; five-hour limit per run.</figcaption></figure>
+    <p><a href="downloads/instances.csv" download>Download computational results (CSV)</a></p>
+    <p>The CSV contains per-setting objectives, lower bounds, optimality gaps, runtimes, termination reasons and other computational statistics.</p>
+    <p class="table-note">Use <code>final_outcome</code> for the final classification. Original solver statuses and actual runtimes are preserved in the CSV. Empty values are unavailable.</p>
+  </section>
+  <section id="correction" class="section">
+    <h2>What Is Being Corrected</h2>
+    <p>This correction concerns <a href="https://doi.org/10.1016/j.trb.2021.02.010">Arslan (2021)</a>, and the standard-LoRP comparisons in <a href="https://doi.org/10.1016/j.cor.2022.106041">Haghi et al. (2023)</a>. The latter paper&rsquo;s partial and decaying coverage experiments are not reassessed here.</p>
+    <ul class="correction-list">
+    <li>The B&amp;P algorithm in Arslan (2021) used a pulse algorithm implementation by Lozano et al. (2016) for solving the pricing problem that was later found to include a bug. In exceptional cases, it was missing feasible negative-reduced-cost routes, potentially overstating lower bounds and leading to incorrect optimality claims.</li>
+    <li>Additionally, the ALNS comparisons in Haghi et al. (2023) used a coverage radius of <code>R+0.06</code> rather than the stated <code>R</code>, enlarging the feasible region slightly, and this reduced objective function values in few instances. The B&amp;P algorithm used in these comparisons therefore did not use the same instance definitions as the original B&amp;P experiments, so their reported results are not directly comparable.</li>
+    <li>Taking these into account, we independently run a corrected branch-and-price implementation.</li>
+    <li>For the standard LoRP studied in Arslan (2021) and Haghi et al. (2023), please use the corrected per-instance results released here. These should be used in place of the B&amp;P reference results and associated optimality claims reported in Tables A.6&ndash;A.12 of the online appendix to Haghi et al. (2023). The partial and decaying coverage experiments in that paper are not reassessed here.</li>
+    </ul>
+  </section>
+  <section id="code" class="section">
+    <h2>Code, Data and Reproduction</h2>
+    <p>The new Java + CPLEX branch-and-price implementation and pulse pricing algorithm were written independently. The download contains the Java solver, benchmark inputs, an example configuration and build instructions.</p>
+    <p>This solver code and webpage were generated using ChatGPT and AI-assisted tools, then reviewed and tested by Okan Arslan.</p>
+    <p><a href="downloads/lorp-code-and-data.zip" download>Download Solver Code and Benchmark Data (ZIP)</a></p>
+    <p><a href="downloads/REPRODUCE.md">Build and Run Instructions</a> &middot; <a href="downloads/PRICING.md">Pricing Algorithm</a> &middot; <a href="downloads/RESULTS.md">Data Dictionary and Limits</a></p>
+    <div class="download-list"><a href="downloads/instances.csv" download><strong>Per-Setting Results</strong><span>CSV / all settings, bounds, statuses and statistics</span></a><a href="downloads/solutions.zip" download><strong>Incumbent Solutions</strong><span>ZIP / one folder per instance, with 3h.json and 5h.json</span></a><a href="downloads/records.zip" download><strong>Detailed Solver Reports</strong><span>ZIP / one folder per instance, with 3h.json and 5h.json</span></a><a href="downloads/infeasibility-evidence.zip" download><strong>Infeasibility Evidence</strong><span>ZIP / 2,904 setting folders, with evidence.json in each</span></a></div>
+    <p class="table-note">Detailed Solver Reports save each run&rsquo;s status, bounds and any incumbent at three hours and when the run ends. These are two reports from the same run, not additional experiments. Infeasibility Evidence covers all 2,904 infeasible settings, 82 of which have exhaustive proofs, while the other 2,822 instances include the solver&rsquo;s infeasibility reports.</p>
+    <p>Compile and run the Java source directly using the build instructions. A compatible JDK and a separately licensed CPLEX installation are required; Python is not. The solver code may be modified under the MIT license. CPLEX binaries and credentials are excluded.</p>
+  </section>
+</main>
+<footer><p>Okan Arslan &middot; Version 1.0.0 &middot; 8 October 2026</p><p>New software: MIT. New results and text: CC BY 4.0. Third-party benchmark and quoted-source rights retained.</p></footer>
+</body>
+</html>

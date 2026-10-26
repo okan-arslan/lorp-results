@@ -1,0 +1,3 @@
+data/raw/** -text
+*.zip binary
+*.png binary
